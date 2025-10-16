@@ -116,7 +116,7 @@ if uploaded_file is not None:
             if cell.font and not cell.font.bold:
                 unit_legal.append(value)
 
-        print("unit_legal (initial):", unit_legal)
+
 
         ws = Sample_sheet
         for col in range(0, len(unit_legal)):
@@ -140,7 +140,6 @@ if uploaded_file is not None:
                 cell_str = str(cell_value).strip().lower()
 
                 if "summary" in cell_str:
-                    print(f"'summary' found at A{row}, stopping.")
                     break  # Stop loop when 'summary' is found
 
                 unit_rent.append(cell_value)
@@ -148,7 +147,6 @@ if uploaded_file is not None:
             return unit_rent
 
         unit_rent = get_unit_rent_list(wb, "Rent Roll w. Lease Charges")
-        print("unit_rent:", unit_rent)
 
         # ----------------------------
         # PASTE THE DATA IN UNIT COLUMN OF LEGAL REPORT SHEET IN SAMPLE REPORT SHEET (column S)
@@ -172,10 +170,8 @@ if uploaded_file is not None:
                 cell_value = ws_local[f"{column}{row}"].value
                 cell_number = ws_local[f"{column}{row}"]
                 if cell_value is not None and str(cell_value).strip().lower() == 'total':
-                    print(f"'total' found at {column}{row}, stopping.")
                     break
                 else:
-                    print(f"Processing cell {column}{row}: {cell_value}")
                 unit_ar.append(cell_value)
                 unit_ar_cell.append(cell_number.coordinate)
 
@@ -188,10 +184,8 @@ if uploaded_file is not None:
             for row in range(8, ws_local.max_row + 1):
                 cell_value = ws_local[f"{column}{row}"].value
                 if cell_value is None:
-                    print(f"'none' found at {column}{row}, stopping.")
                     break
                 else:
-                    print(f"Processing cell {column}{row}: {cell_value}")
                 resident_ar.append(cell_value)
 
         process_until_none_B(wb, "AR Aging (excluding HUD)", column='B')
@@ -203,10 +197,8 @@ if uploaded_file is not None:
             for row in range(8, ws_local.max_row + 1):
                 cell_value = ws_local[f"{column}{row}"].value
                 if cell_value is None:
-                    print(f"'none' found at {column}{row}, stopping.")
                     break
                 else:
-                    print(f"Processing cell {column}{row}: {cell_value}")
                 status_ar.append(cell_value)
 
         process_until_none_C(wb, "AR Aging (excluding HUD)", column='C')
@@ -218,10 +210,8 @@ if uploaded_file is not None:
             for row in range(8, ws_local.max_row + 1):
                 cell_value = ws_local[f"{column}{row}"].value
                 if cell_value is None:
-                    print(f"'none' found at {column}{row}, stopping.")
                     break
                 else:
-                    print(f"Processing cell {column}{row}: {cell_value}")
                 tenant_name_ar.append(cell_value)
 
         process_until_none_D(wb, "AR Aging (excluding HUD)", column='D')
@@ -233,10 +223,8 @@ if uploaded_file is not None:
             for row in range(8, ws_local.max_row + 1):
                 cell_value = ws_local[f"{column}{row}"].value
                 if cell_value is None:
-                    print(f"'none' found at {column}{row}, stopping.")
                     break
                 else:
-                    print(f"Processing cell {column}{row}: {cell_value}")
                 _0_30_ar.append(cell_value)
 
         process_until_none_F(wb, "AR Aging (excluding HUD)", column='F')
@@ -248,10 +236,8 @@ if uploaded_file is not None:
             for row in range(8, ws_local.max_row + 1):
                 cell_value = ws_local[f"{column}{row}"].value
                 if cell_value is None:
-                    print(f"'none' found at {column}{row}, stopping.")
                     break
                 else:
-                    print(f"Processing cell {column}{row}: {cell_value}")
                 total_charges_ar.append(cell_value)
 
         process_until_none_E(wb, "AR Aging (excluding HUD)", column='E')
@@ -327,7 +313,6 @@ if uploaded_file is not None:
 
                 # Stop condition: if "market" is found
                 if "market" in g_text:
-                    print(f"'market' found at G{row}, stopping loop.")
                     break
 
                 # Condition 1: G contains "rent"
@@ -344,7 +329,6 @@ if uploaded_file is not None:
 
         # Use data-only workbook for amounts (like original which used data_only=True)
         unit_rent_amount = fetch_rent_amounts(wb_data, "Rent Roll w. Lease Charges")
-        print("unit_rent_amount:", unit_rent_amount)
 
         # ----------------------------
         # FETCH NAME RENT (original logic used property_value = Sample_sheet['A3'])
@@ -358,7 +342,6 @@ if uploaded_file is not None:
 
                 # Stop condition: if cell value == property_value
                 if value == property_value:
-                    print(f"Property value '{property_value}' found at E{row}, stopping loop.")
                     break
 
                 # Append only if not blank
@@ -370,7 +353,6 @@ if uploaded_file is not None:
         # call with data-only workbook (preserve original use of data_only)
         property_value = Sample_sheet['A3']
         name_rent = fetch_name_rent(wb_data, "Rent Roll w. Lease Charges", property_value)
-        print("name_rent:", name_rent)
 
         # ----------------------------
         # Map unit_rent -> names and amounts (zip)
@@ -422,7 +404,6 @@ if uploaded_file is not None:
                 if value is None or str(value).strip() == "":
                     blank_count_local += 1
                     if blank_count_local > 6:  # stop if more than 6 consecutive blanks
-                        print(f"More than 6 consecutive blanks at row {row}, stopping loop.")
                         break
                     # If 1 or 2 blanks, just skip and continue
                     continue
@@ -434,7 +415,6 @@ if uploaded_file is not None:
 
         # use data-only workbook for reading tenant memo values
         tenant_units = fetch_tenant_units(wb_data, "Tenant Memo's")
-        print("tenant_units:", tenant_units)
 
         unit_tenant_cell = []
 
@@ -447,7 +427,6 @@ if uploaded_file is not None:
                 index = unit_rent_norm.index(unit)  # 0-based index
                 unit_tenant_cell.append(index)
 
-        print("unit_tenant_cell:", unit_tenant_cell)
 
         # ----------------------------
         # fetch_type_tenant (search 'type' in column A)
@@ -463,7 +442,6 @@ if uploaded_file is not None:
                 if value is None or str(value).strip() == "":
                     blank_count_local += 1
                     if blank_count_local > 5:  # stop if more than 5 consecutive blanks
-                        print(f"More than 5 consecutive blanks at row {row}, stopping loop.")
                         break
                     continue  # skip blank cell
                 else:
@@ -475,7 +453,6 @@ if uploaded_file is not None:
             return type_tenant_local
 
         type_tenant = fetch_type_tenant(wb_data)
-        print("type_tenant:", type_tenant)
 
         # ----------------------------
         # fetch_date_tenant (search 'date' in column C)
@@ -491,7 +468,6 @@ if uploaded_file is not None:
                 if value is None or str(value).strip() == "":
                     blank_count_local += 1
                     if blank_count_local > 5:  # stop if more than 5 consecutive blanks
-                        print(f"More than 5 consecutive blanks at row {row}, stopping loop.")
                         break
                     continue  # skip blank cell
                 else:
@@ -503,7 +479,6 @@ if uploaded_file is not None:
             return date_tenant_local
 
         date_tenant = fetch_date_tenant(wb_data)
-        print("date_tenant:", date_tenant)
 
         # ----------------------------
         # fetch_memo_tenant (column D non-bold)
@@ -521,7 +496,6 @@ if uploaded_file is not None:
                 if value is None or str(value).strip() == "":
                     blank_count_local += 1
                     if blank_count_local > 5:  # stop if more than 5 consecutive blanks
-                        print(f"More than 5 consecutive blanks at row {row}, stopping loop.")
                         break
                     continue  # skip blank cell
                 else:
@@ -535,7 +509,6 @@ if uploaded_file is not None:
             return memo_tenant_local
 
         memo_tenant = fetch_memo_tenant(wb_data)
-        print("memo_tenant:", memo_tenant)
 
         # ----------------------------
         # Re-parse Legal sheet for unit_legal and status_legal (B-E), preserve original logic
@@ -559,7 +532,6 @@ if uploaded_file is not None:
             if unit_value is None or str(unit_value).strip() == "":
                 blank_count += 1
                 if blank_count >= 20:  # stop if 20 consecutive blanks
-                    print(f"20 consecutive blanks found at row {unit_cell.row}, stopping.")
                     break
                 continue
 
@@ -571,8 +543,6 @@ if uploaded_file is not None:
                 unit_legal.append(str(unit_value).strip())
                 status_legal.append(status_value)
 
-        print("unit_legal (reparsed):", unit_legal)
-        print("status_legal:", status_legal)
 
         # --- Paste status into Sample Report column K ---
         row_start = 3
@@ -649,7 +619,6 @@ if uploaded_file is not None:
             if all(cell.value is None or str(cell.value).strip() == "" for cell in cells):
                 blank_count += 1
                 if blank_count > max_consecutive_blank:
-                    print(f"{max_consecutive_blank} consecutive blanks found at row {f_cell.row}, stopping.")
                     break
             else:
                 blank_count = 0  # reset blank counter
@@ -717,3 +686,4 @@ if uploaded_file is not None:
         st.text(traceback.format_exc())
 else:
     st.info("Please upload your Custom Report.xlsx file to process.")
+
